@@ -1,9 +1,25 @@
 # -*- coding: utf-8 -*-
 """
-Nynke Niehof (2016) Radboud University Nijmegen; Donders Institute for Brain, Cognition and Behaviour.
+Copyright © 2016, N. Niehof, Radboud University Nijmegen
+
+PsiMarginal is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+PsiMarginal is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with PsiMarginal. If not, see <http://www.gnu.org/licenses/>.
+
+---
 
 Psi adaptive staircase procedure for use in psychophysics, as described in Kontsevich & Tyler (1999)
-and psi-marginal staircase as described in Prins(2013). Implementation based on the Palamedes toolbox for Matlab.
+and psi-marginal staircase as described in Prins(2013). Implementation based on the psi-marginal method
+in the Palamedes toolbox (version 1.8.1) for Matlab.
 
 References:
 
@@ -32,7 +48,7 @@ def PF(parameters, psyfun='cGauss'):
             
             beta    : slope
             
-            gamma   : guessing rate (optional), default is 0.5
+            gamma   : guessing rate (optional), default is 0.2
             
             lambda  : lapse rate (optional), default is 0.04
             
@@ -56,11 +72,11 @@ def PF(parameters, psyfun='cGauss'):
         gamma           = llambda
     elif np.size(parameters,1) == 3:
         [alpha,beta,x]  = np.transpose(parameters)
-        gamma           = 0.5
+        gamma           = 0.2
         llambda         = 0.04
     else: # insufficient number of parameters will give a flat line
         psyfun          = None
-        gamma           = 0.5
+        gamma           = 0.2
         llambda         = 0.04
     
     ## Psychometric function
@@ -143,7 +159,7 @@ class Psi:
             >>> s   = range(-5,5) # possible stimulus intensities
             obj = Psi(s)
         
-        The stimulus intensity to be used in the current trial can be found in the class variable xCurrent.
+        The stimulus intensity to be used in the current trial can be found in the field xCurrent.
         
         Example:
             >>> stim = obj.xCurrent
@@ -152,8 +168,6 @@ class Psi:
         
         Example:
             >>> obj.addData(resp)
-    
-    Note: if package sklearn (part of scikit) is not available, use list(itertools.product()) instead of cartesian()
     """
     
     def __init__(self, stimRange, Pfunction='cGauss', nTrials=50, threshold=None, thresholdPrior=('uniform',None), slope=None, slopePrior=('uniform',None),
@@ -332,7 +346,7 @@ class Psi:
             self.pSlope     = np.multiply(self.slope,       np.sum(self.pdf, axis=(0,2,3)))
             self.pLapse     = np.multiply(self.lapseRate,   np.sum(self.pdf, axis=(0,1,2)))
             self.pGuess     = np.multiply(self.guessRate,   np.sum(self.pdf, axis=(0,1,3)))
-        ## Expected values of parameters
+        ## Distribution means as expected values of parameters
         self.eThreshold     = np.sum(self.pThreshold)
         self.eSlope         = np.sum(self.pSlope)
         self.eLapse         = np.sum(self.pLapse)
