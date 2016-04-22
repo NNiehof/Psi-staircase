@@ -337,20 +337,20 @@ class Psi:
 
         ## Marginalized probabilities per parameter      
         if self.gammaEQlambda:
-            self.pThreshold = np.multiply(self.threshold,   np.sum(self.pdf, axis=(1,2)))
-            self.pSlope     = np.multiply(self.slope,       np.sum(self.pdf, axis=(0,2)))
-            self.pLapse     = np.multiply(self.lapseRate,   np.sum(self.pdf, axis=(0,1)))
+            self.pThreshold = np.sum(self.pdf, axis=(1,2))
+            self.pSlope     = np.sum(self.pdf, axis=(0,2))
+            self.pLapse     = np.sum(self.pdf, axis=(0,1))
             self.pGuess     = self.pLapse
         else:
-            self.pThreshold = np.multiply(self.threshold,   np.sum(self.pdf, axis=(1,2,3)))
-            self.pSlope     = np.multiply(self.slope,       np.sum(self.pdf, axis=(0,2,3)))
-            self.pLapse     = np.multiply(self.lapseRate,   np.sum(self.pdf, axis=(0,1,2)))
-            self.pGuess     = np.multiply(self.guessRate,   np.sum(self.pdf, axis=(0,1,3)))
+            self.pThreshold = np.sum(self.pdf, axis=(1,2,3))
+            self.pSlope     = np.sum(self.pdf, axis=(0,2,3))
+            self.pLapse     = np.sum(self.pdf, axis=(0,1,2))
+            self.pGuess     = np.sum(self.pdf, axis=(0,1,3))
         ## Distribution means as expected values of parameters
-        self.eThreshold     = np.sum(self.pThreshold)
-        self.eSlope         = np.sum(self.pSlope)
-        self.eLapse         = np.sum(self.pLapse)
-        self.eGuess         = np.sum(self.pGuess)
+        self.eThreshold     = np.sum( np.multiply(self.threshold,   self.pThreshold))
+        self.eSlope         = np.sum( np.multiply(self.slope,       self.pSlope))
+        self.eLapse         = np.sum( np.multiply(self.lapseRate,   self.pLapse))
+        self.eGuess         = np.sum( np.multiply(self.guessRate,   self.pGuess))
         
         ## Start calculating the next minimum entropy stimulus
         threading.Thread(target=self.minEntropyStim).start()
