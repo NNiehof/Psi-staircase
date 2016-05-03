@@ -175,10 +175,10 @@ class Psi:
         
         ## Psychometric function parameters
         self.stimRange      = stimRange # range of stimulus intensities
-        self.threshold      = np.arange(-10,10,0.05)
-        self.slope          = np.arange(0.005,100,0.05)
-        self.guessRate      = np.arange(0.0,0.11,0.1)
-        self.lapseRate      = np.arange(0.0,0.11,0.1)
+        self.threshold      = np.arange(-10,10,0.1)
+        self.slope          = np.arange(0.005,20,0.1)
+        self.guessRate      = np.arange(0.0,0.11,0.05)
+        self.lapseRate      = np.arange(0.0,0.11,0.05)
         self.marginalize    = marginalize # marginalize out nuisance parameters gamma and lambda?
             
         if threshold is not None:
