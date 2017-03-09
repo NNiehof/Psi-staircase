@@ -42,4 +42,11 @@ The stimulus intensity to be used in the current trial can be found in the field
 
 After each trial, update the psi staircase with the subject response, by calling the addData method.
 
+The current posterior can be plotted by calling PsiMarginal.plot(). The mean estimate of the parameters can be
+obtained by calling psi.eThreshold, psi.eSlope, psi.eLapse to give the estimated threshold, slope and lapse rate respectively.
+
 For further information, see class documentation.
+
+A demo illustrating  provided in demo.py. demo.py runs the algorithm on a simulated subject, plots the marginal posterior for each parameter (including the corresponding mean +- sd) and also plots the mean +- sd of the posterior psychometric curve. An example output of demo.py is below.
+
+![Figure1](PsiCurve.png)
