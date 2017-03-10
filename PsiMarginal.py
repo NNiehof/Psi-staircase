@@ -246,8 +246,8 @@ class Psi:
         # prior: prior probability over all parameters p_0(alpha,sigma,gamma,lambda)
         if self.gammaEQlambda:
             self.dimensions = (len(self.threshold), len(self.slope), len(self.lapseRate), len(self.stimRange))
-            self.parameters = cartesian((self.threshold, self.slope, self.lapseRate, self.stimRange))
-            self.likelihood = pf(self.parameters, psyfun=Pfunction)
+            self.likelihood = pf(cartesian((self.threshold, self.slope, self.lapseRate, self.stimRange)),
+                                 psyfun=Pfunction)
             self.likelihood = np.reshape(self.likelihood, self.dimensions)  # dims: (alpha, sigma, lambda, x)
             self.pr = cartesian((self.priorAlpha, self.priorSigma, self.priorLambda))
             self.prior = np.prod(self.pr, axis=1)  # row-wise products of prior probabilities
@@ -255,8 +255,9 @@ class Psi:
         else:
             self.dimensions = (
                 len(self.threshold), len(self.slope), len(self.guessRate), len(self.lapseRate), len(self.stimRange))
-            self.parameters = cartesian((self.threshold, self.slope, self.guessRate, self.lapseRate, self.stimRange))
-            self.likelihood = pf(self.parameters, psyfun=Pfunction)
+            self.likelihood = pf(
+                cartesian((self.threshold, self.slope, self.guessRate, self.lapseRate, self.stimRange)),
+                psyfun=Pfunction)
             self.likelihood = np.reshape(self.likelihood, self.dimensions)  # dims: (alpha, sigma, gamma, lambda, x)
             self.pr = cartesian((self.priorAlpha, self.priorSigma, self.priorGamma, self.priorLambda))
             self.prior = np.prod(self.pr, axis=1)  # row-wise products of prior probabilities
