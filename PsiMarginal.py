@@ -88,6 +88,9 @@ def pf(parameters, psyfun='cGauss'):
     elif psyfun == 'Gumbel':
         # F(x; mu, sigma) = 1 - exp(-10^(sigma(x-mu)))
         p = ones - np.exp(-np.power((np.multiply(ones, 10.0)), (np.multiply(sigma, (np.subtract(x, mu))))))
+    elif psyfun == 'Weibull':
+        # F(x; mu, sigma)
+        p = 1 - np.exp(-(np.divide(x, mu)) ** sigma)
     else:
         # flat line if no psychometric function is specified
         p = np.ones(np.shape(mu))
@@ -215,7 +218,7 @@ class Psi:
         self.guessRate = np.arange(0.0, 0.11, 0.05)
         self.lapseRate = np.arange(0.0, 0.11, 0.05)
         self.marginalize = marginalize  # marginalize out nuisance parameters gamma and lambda?
-
+        self.psyfun = Pfunction
         if threshold is not None:
             self.threshold = threshold
             if np.shape(self.threshold) == ():
@@ -247,7 +250,7 @@ class Psi:
         if self.gammaEQlambda:
             self.dimensions = (len(self.threshold), len(self.slope), len(self.lapseRate), len(self.stimRange))
             self.likelihood = pf(cartesian((self.threshold, self.slope, self.lapseRate, self.stimRange)),
-                                 psyfun=Pfunction)
+                                 psyfun=self.psyfun)
             self.likelihood = np.reshape(self.likelihood, self.dimensions)  # dims: (alpha, sigma, lambda, x)
             self.pr = cartesian((self.priorAlpha, self.priorSigma, self.priorLambda))
             self.prior = np.prod(self.pr, axis=1)  # row-wise products of prior probabilities
@@ -257,7 +260,7 @@ class Psi:
                 len(self.threshold), len(self.slope), len(self.guessRate), len(self.lapseRate), len(self.stimRange))
             self.likelihood = pf(
                 cartesian((self.threshold, self.slope, self.guessRate, self.lapseRate, self.stimRange)),
-                psyfun=Pfunction)
+                psyfun=self.psyfun)
             self.likelihood = np.reshape(self.likelihood, self.dimensions)  # dims: (alpha, sigma, gamma, lambda, x)
             self.pr = cartesian((self.priorAlpha, self.priorSigma, self.priorGamma, self.priorLambda))
             self.prior = np.prod(self.pr, axis=1)  # row-wise products of prior probabilities
@@ -441,7 +444,7 @@ class Psi:
         # Start calculating the next minimum entropy stimulus
         threading.Thread(target=self.minEntropyStim).start()
 
-    def plot(self, muRef=None, sigmaRef=None, lapseRef=None, guessRef=None, psyfun='cGauss', save=False):
+    def plot(self, muRef=None, sigmaRef=None, lapseRef=None, guessRef=None, save=False):
         """
         Plot marginal distribution of mu, sigma, lapse and posterior distribution of psychometric curve.
         Title of the parameter posteriors indicate the mean +- sd of parameters marginal posterior.
@@ -475,12 +478,12 @@ class Psi:
                 nx = len(self.stimRange)
                 params = np.array(([np.tile(muRef, nx), np.tile(sigmaRef, nx), np.tile(guessRef, nx),
                                     np.tile(lapseRef, nx), self.stimRange])).T
-                curve = pf(params, psyfun=psyfun)
+                curve = pf(params, psyfun=self.psyfun)
             else:  # assume guess rate and lapse are equal
                 nx = len(self.stimRange)
                 params = np.array(
                     ([np.tile(muRef, nx), np.tile(sigmaRef, nx), np.tile(lapseRef, nx), self.stimRange])).T
-                curve = pf(params, psyfun=psyfun)
+                curve = pf(params, psyfun=self.psyfun)
         else:
             ref = False
 
