@@ -209,7 +209,7 @@ class Psi:
     def __init__(self, stimRange, Pfunction='cGauss', nTrials=50, threshold=None, thresholdPrior=('uniform', None),
                  slope=None, slopePrior=('uniform', None),
                  guessRate=None, guessPrior=('uniform', None), lapseRate=None, lapsePrior=('uniform', None),
-                 marginalize=True):
+                 marginalize=True, thread=True):
 
         # Psychometric function parameters
         self.stimRange = stimRange  # range of stimulus intensities
@@ -219,6 +219,8 @@ class Psi:
         self.lapseRate = np.arange(0.0, 0.11, 0.05)
         self.marginalize = marginalize  # marginalize out nuisance parameters gamma and lambda?
         self.psyfun = Pfunction
+        self.thread = thread
+
         if threshold is not None:
             self.threshold = threshold
             if np.shape(self.threshold) == ():
@@ -442,7 +444,10 @@ class Psi:
         self.stdGuess = np.sqrt(np.sum(np.multiply((self.guessRate - self.eGuess) ** 2, self.pGuess)))
 
         # Start calculating the next minimum entropy stimulus
-        threading.Thread(target=self.minEntropyStim).start()
+        if self.thread:
+            threading.Thread(target=self.minEntropyStim).start()
+        else:
+            self.minEntropyStim()
 
     def plot(self, muRef=None, sigmaRef=None, lapseRef=None, guessRef=None, save=False):
         """

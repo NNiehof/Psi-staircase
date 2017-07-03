@@ -10,10 +10,10 @@ guessRate = lapse  # guess rate equal to lapse
 
 # parameters used to simulate observer
 muGen = 1
-sigmaGen = 2
+sigmaGen = 1
 lapseGen = 0.05
 
-thresholdPrior = ('normal', 3, 2)  # truncated normal distribution as prior
+thresholdPrior = ('normal', 0.5, 2)  # truncated normal distribution as prior
 slopePrior = ('gamma', 2, 0.3)  # truncated gamma distribution as prior
 lapsePrior = ('beta', 2, 20)  # truncated beta distribution as prior
 
@@ -29,6 +29,7 @@ generativeParams = np.expand_dims(generativeParams, 0)
 
 print 'Simulating an observer with mu=%.2f, sigma=%.2f and lapse=%.2f.' % (muGen, sigmaGen, lapseGen)
 for i in range(0, ntrials):  # run for length of trials
+    print psi.xCurrent
     r = PsiMarginal.GenerateData(generativeParams, psyfun='Weibull')  # generate simulated response
     psi.addData(r)  # update Psi with response
     print 'Trial %d of %d' % (i, ntrials)
