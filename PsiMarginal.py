@@ -339,13 +339,13 @@ class Psi:
             metadata['Numpy Version'] = np.__version__
             metadata['Scipy Version '] = scipy.__version__
             metadata['psyFunction'] = self.psyfun
-            metadata['thresholdGrid'] = self.threshold
+            metadata['thresholdGrid'] = self.threshold.tolist()
             metadata['thresholdPrior'] = self.thresholdPrior
-            metadata['slopeGrid'] = self.slope
+            metadata['slopeGrid'] = self.slope.tolist()
             metadata['slopePrior'] = self.slopePrior
-            metadata['gammaGrid'] = self.guessRate
+            metadata['gammaGrid'] = self.guessRate.tolist()
             metadata['gammaPrior'] = self.guessPrior
-            metadata['lapseGrid'] = self.lapseRate
+            metadata['lapseGrid'] = self.lapseRate.tolist()
             metadata['lapsePrior'] = self.lapsePrior
             return metadata
 
