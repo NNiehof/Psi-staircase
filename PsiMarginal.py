@@ -31,14 +31,13 @@ Prins, N. (2013). The psi-marginal adaptive method: How to give nuisance paramet
     deserve (no more, no less). Journal of Vision, 13(7):3, 1-17.
 """
 
-import threading
-
-import matplotlib.pyplot as plt
 import numpy as np
-import scipy
-from scipy.special import erfc
-from scipy.stats import norm, beta, gamma
 from sklearn.utils.extmath import cartesian
+import scipy
+from scipy.stats import norm, beta, gamma
+from scipy.special import erfc
+import threading
+import matplotlib.pyplot as plt
 
 
 def pf(parameters, psyfun='cGauss'):
@@ -215,6 +214,7 @@ class Psi:
 
         # Psychometric function parameters
         self.stimRange = stimRange  # range of stimulus intensities
+        self.version = 1.0
         self.threshold = np.arange(-10, 10, 0.1)
         self.slope = np.arange(0.005, 20, 0.1)
         self.guessRate = np.arange(0.0, 0.11, 0.05)
@@ -241,6 +241,11 @@ class Psi:
                 self.lapseRate = np.expand_dims(self.lapseRate, 0)
 
         # Priors
+        self.thresholdPrior = thresholdPrior
+        self.slopePrior = slopePrior
+        self.guessPrior = guessPrior
+        self.lapsePrior = lapsePrior
+
         self.priorAlpha = self.__genprior(self.threshold, *thresholdPrior)
         self.priorSigma = self.__genprior(self.slope, *slopePrior)
         self.priorGamma = self.__genprior(self.guessRate, *guessPrior)
@@ -328,26 +333,26 @@ class Psi:
             p = np.ones(nx) / nx
         return p
 
-        def meta_data(self):
-            import time
-            import sys
-            metadata = {}
-            date = time.strftime("%Y-%m-%d %H:%M:%S", time.gmtime(time.time()))
-            metadata['date'] = date
-            metadata['Version'] = self.version
-            metadata['Python Version'] = sys.version
-            metadata['Numpy Version'] = np.__version__
-            metadata['Scipy Version '] = scipy.__version__
-            metadata['psyFunction'] = self.psyfun
-            metadata['thresholdGrid'] = self.threshold.tolist()
-            metadata['thresholdPrior'] = self.thresholdPrior
-            metadata['slopeGrid'] = self.slope.tolist()
-            metadata['slopePrior'] = self.slopePrior
-            metadata['gammaGrid'] = self.guessRate.tolist()
-            metadata['gammaPrior'] = self.guessPrior
-            metadata['lapseGrid'] = self.lapseRate.tolist()
-            metadata['lapsePrior'] = self.lapsePrior
-            return metadata
+    def meta_data(self):
+        import time
+        import sys
+        metadata = {}
+        date = time.strftime("%Y-%m-%d %H:%M:%S", time.gmtime(time.time()))
+        metadata['date'] = date
+        metadata['Version'] = self.version
+        metadata['Python Version'] = sys.version
+        metadata['Numpy Version'] = np.__version__
+        metadata['Scipy Version '] = scipy.__version__
+        metadata['psyFunction'] = self.psyfun
+        metadata['thresholdGrid'] = self.threshold.tolist()
+        metadata['thresholdPrior'] = self.thresholdPrior
+        metadata['slopeGrid'] = self.slope.tolist()
+        metadata['slopePrior'] = self.slopePrior
+        metadata['gammaGrid'] = self.guessRate.tolist()
+        metadata['gammaPrior'] = self.guessPrior
+        metadata['lapseGrid'] = self.lapseRate.tolist()
+        metadata['lapsePrior'] = self.lapsePrior
+        return metadata
 
     def __entropy(self, pdf):
         """Calculate shannon entropy of posterior distribution.
