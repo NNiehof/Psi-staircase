@@ -162,6 +162,11 @@ class Psi:
         
         Example:
             >>> stim = obj.xCurrent
+        NOTE: if obj.xCurrent returns None, the calculation is not yet finished.
+        This can be avoided by waiting until xCurrent has a numeric value, e.g.:
+            >>> while obj.xCurrent == None:
+                    pass # hang in this loop until the psi calculation has finished
+                stim = obj.xCurrent
         
         After each trial, update the psi staircase with the subject response, by calling the addData method.
         
