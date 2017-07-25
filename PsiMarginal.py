@@ -35,7 +35,6 @@ import numpy as np
 from sklearn.utils.extmath import cartesian
 from scipy.stats import norm
 from scipy.special import erfc
-import threading
 
 
 def PF(parameters, psyfun='cGauss'):
@@ -353,5 +352,5 @@ class Psi:
         self.eGuess         = np.sum( np.multiply(self.guessRate,   self.pGuess))
         
         ## Start calculating the next minimum entropy stimulus
-        threading.Thread(target=self.minEntropyStim).start()
+        self.minEntropyStim()
 
