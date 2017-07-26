@@ -251,7 +251,7 @@ class Psi:
         self.guessPrior = guessPrior
         self.lapsePrior = lapsePrior
 
-        self.priorAlpha = self.__genprior(self.threshold, *thresholdPrior)
+        self.priorMu = self.__genprior(self.threshold, *thresholdPrior)
         self.priorSigma = self.__genprior(self.slope, *slopePrior)
         self.priorGamma = self.__genprior(self.guessRate, *guessPrior)
         self.priorLambda = self.__genprior(self.lapseRate, *lapsePrior)
@@ -267,14 +267,14 @@ class Psi:
                 pf(cartesian((self.threshold, self.slope, self.lapseRate, self.stimRange)), psyfun=Pfunction), self.dimensions)
             # row-wise products of prior probabilities
             self.prior = np.reshape(
-                np.prod(cartesian((self.priorAlpha, self.priorBeta, self.priorLambda)), axis=1), self.dimensions[:-1])
+                np.prod(cartesian((self.priorMu, self.priorSigma, self.priorLambda)), axis=1), self.dimensions[:-1])
         else:
-            self.dimensions = (len(self.threshold), len(self.slope), len(self.guessRate), len(self.lapseRate, len(self.stimRange)))
+            self.dimensions = (len(self.threshold), len(self.slope), len(self.guessRate), len(self.lapseRate), len(self.stimRange))
             self.likelihood = np.reshape(
                 pf(cartesian((self.threshold, self.slope, self.guessRate, self.lapseRate, self.stimRange)), psyfun=Pfunction), self.dimensions)
             # row-wise products of prior probabilities
             self.prior = np.reshape(
-                np.prod(cartesian((self.priorAlpha, self.priorBeta, self.priorGamma, self.priorLambda)), axis=1), self.dimensions[:-1])
+                np.prod(cartesian((self.priorMu, self.priorSigma, self.priorGamma, self.priorLambda)), axis=1), self.dimensions[:-1])
 
         # normalize prior
         self.prior = self.prior / np.sum(self.prior)
