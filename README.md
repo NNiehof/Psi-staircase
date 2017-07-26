@@ -1,8 +1,8 @@
 # PsiMarginal
 Psi adaptive staircase procedure for use in psychophysics.
 
-## Author:
-Nynke Niehof, Radboud University Nijmegen
+## Authors:
+Nynke Niehof, James Cooke, Radboud University Nijmegen
 
 ## License:
 Copyright © 2016, N. Niehof, Radboud University Nijmegen
